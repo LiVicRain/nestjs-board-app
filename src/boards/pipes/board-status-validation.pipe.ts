@@ -3,7 +3,7 @@ import {
   BadRequestException,
   PipeTransform,
 } from '@nestjs/common';
-import { BoardStatus } from '../model/board.model';
+import { BoardStatus } from '../entities/board.entity';
 
 export class BoardStatusValidationPipe implements PipeTransform {
   readonly StatusOptions = [BoardStatus.PRIVATE, BoardStatus.PUBLIC];
@@ -19,7 +19,7 @@ export class BoardStatusValidationPipe implements PipeTransform {
     if (!this.isStatusValid(value)) {
       throw new BadRequestException(`${value}는 정확한 status가 아닙니다`);
     }
-    console.log('metadata', metadata);
+    // console.log('metadata', metadata);
 
     return value;
   }

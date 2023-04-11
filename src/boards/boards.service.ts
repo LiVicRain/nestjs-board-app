@@ -1,10 +1,45 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Board, BoardStatus } from './model/board.model';
-import { v4 as uuid } from 'uuid';
+// import { v1 as uuid } from 'uuid';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { Board, BoardStatus } from './entities/board.entity';
+import { BoardsRepository } from './boards.repository';
 
 @Injectable()
 export class BoardsService {
+  constructor(private boardsRepository: BoardsRepository) {}
+
+  async getAllBoards(): Promise<Board[]> {
+    return this.boardsRepository.find();
+  }
+
+  createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    return this.boardsRepository.createBoard(createBoardDto);
+  }
+
+  getBoardById(id: number): Promise<Board> {
+    return this.boardsRepository.getBoardById(id);
+  }
+
+  async deletBoardById(id: number): Promise<void> {
+    const result = await this.boardsRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(
+        `Boards 에서 삭제하려는 id = ${id} 를 찾을 수 없습니다`,
+      );
+    }
+  }
+
+  async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
+    const board = await this.getBoardById(id);
+    board.status = status;
+
+    await this.boardsRepository.save(board);
+
+    return board;
+  }
+
+  /* 
+  // 로컬
   private boards: Board[] = [];
 
   getAllBoards(): Board[] {
@@ -41,5 +76,6 @@ export class BoardsService {
     const board = this.getBoardById(id);
     board.status = status;
     return board;
-  }
+  } 
+  */
 }
