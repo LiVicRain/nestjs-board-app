@@ -1,4 +1,4 @@
-import { jwt_access_token_option } from 'src/configs/jwt.const';
+import { jwt_access_token_option } from 'config/jwt.const';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { AuthCredentialDto } from './dto/auth-credential.dto';

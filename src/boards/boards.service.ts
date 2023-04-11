@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { Board, BoardStatus } from './entities/board.entity';
 import { BoardsRepository } from './boards.repository';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class BoardsService {
@@ -12,8 +13,15 @@ export class BoardsService {
     return this.boardsRepository.find();
   }
 
-  createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    return this.boardsRepository.createBoard(createBoardDto);
+  async getAllBoardsByUserId(user: User): Promise<Board[]> {
+    const query = this.boardsRepository.createQueryBuilder('board'); // board 테이블에서
+    query.where('board.userId = :userId', { userId: user.id });
+    const boards = await query.getMany();
+    return boards;
+  }
+
+  createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board> {
+    return this.boardsRepository.createBoard(createBoardDto, user);
   }
 
   getBoardById(id: number): Promise<Board> {

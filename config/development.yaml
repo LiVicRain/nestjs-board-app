@@ -1,0 +1,8 @@
+db:
+  host: '0.0.0.0'
+  username: 'flutter_user'
+  password: '000000'
+  synchronize: true
+
+jwt:
+  secret: 'udpickJWTACCESS'
